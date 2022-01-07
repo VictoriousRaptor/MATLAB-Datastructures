@@ -63,8 +63,12 @@ classdef CStack < handle
             end
         end
         
-        function s = size(self)
+        function s = size(self)  % Can be used as size(stack)
             s = self.cur;
+        end
+
+        function n = numel(self)  % Can be used as numel(stack)
+            n = self.cur;
         end
 
         function c = capacity(self)
@@ -107,7 +111,7 @@ classdef CStack < handle
             end        
         end
         
-        function display(self)
+        function disp(self)
             if self.cur
                 for i = 1:self.cur
                     disp([num2str(i) '-th element of the stack:']);

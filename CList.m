@@ -1,26 +1,26 @@
 classdef CList < handle
-% ¶¨ÒåÁËÒ»¸ö£¨ÓĞĞòµÄ£©ÁĞ±í
-% list = CList; ¶¨ÒåÒ»¸ö¿ÕµÄ¶ÓÁĞ¶ÔÏó
-% list = CList(c); ¶¨Òå¶ÓÁĞ¶ÔÏó£¬²¢ÓÃc³õÊ¼»¯q£¬µ±cÎªcellÊ±£¬cµÄÔªËØÎªÕ»µÄÊı¾İ£¬
-%    ·ñÔòc±¾ÉíÎªÕ»µÄµÚÒ»¸öÊı¾İ
+% å®šä¹‰äº†ä¸€ä¸ªï¼ˆæœ‰åºçš„ï¼‰åˆ—è¡¨
+% list = CList; å®šä¹‰ä¸€ä¸ªç©ºçš„é˜Ÿåˆ—å¯¹è±¡
+% list = CList(c); å®šä¹‰é˜Ÿåˆ—å¯¹è±¡ï¼Œå¹¶ç”¨cåˆå§‹åŒ–qï¼Œå½“cä¸ºcellæ—¶ï¼Œcçš„å…ƒç´ ä¸ºæ ˆçš„æ•°æ®ï¼Œ
+%    å¦åˆ™cæœ¬èº«ä¸ºæ ˆçš„ç¬¬ä¸€ä¸ªæ•°æ®
 %
-% Ö§³Ö²Ù×÷£º
-%     sz = CList.size() ·µ»Ø¶ÓÁĞÄÚÔªËØ¸öÊı
-%     y = CList.empty() ·µ»Ø¶ÓÁĞÊÇ·ñÎª¿Õ
-%     CList.pushtofront(el) ½«ĞÂÔªËØelÑ¹ÈëÁĞ±íÍ·
-%     CList.pushtorear(el) ½«ĞÂÔªËØelÑ¹ÈëÁĞ±íÎ²²¿
-%     el = CList.popfront()  µ¯³öÁĞ±íÍ·²¿ÔªËØ£¬ÓÃ»§Ğè×Ô¼ºÈ·±£¶ÓÁĞ·Ç¿Õ
-%     el = CList.poprear() µ¯³öÁĞ±íÎ²²¿ÔªËØ£¬ÓÃ»§Ğè×Ô¼ºÈ·±£ÁĞ±í·Ç¿Õ
-%     el = CList.front() ·µ»Ø¶ÓÊ×ÔªËØ£¬ÓÃ»§Ğè×Ô¼ºÈ·±£¶ÓÁĞ·Ç¿Õ
-%     el = CList.back() ·µ»Ø¶ÓÎ²ÔªËØ£¬ÓÃ»§Ğè×Ô¼ºÈ·±£¶ÓÁĞ·Ç¿Õ
-%     CList.remove(k) É¾³ıµÚk¸öÔªËØ£¬Èç¹ûkÎª¸ºµÄ£¬Ôò´ÓÎ²²¿¿ªÊ¼Ëã  
-%     CList.removeall() É¾³ı¶ÓÁĞËùÓĞÔªËØ
-%     CList.add(el, k) ²åÈëÔªËØelµ½µÚk¸öÎ»ÖÃ£¬Èç¹ûkÎª¸ºµÄ£¬Ôò´Ó½áÎ²¿ªÊ¼Ëã
-%     CList.contains(el) ¼ì²éelÊÇ·ñ³öÏÖÔÚÁĞ±íÖĞ£¬Èç¹û³öÏÖ£¬·µ»ØµÚÒ»¸öÏÂ±ê
-%     CList.get(k) ·µ»ØÁĞ±íÖÆ¶¨Î»ÖÃµÄÔªËØ£¬Èç¹ûkÎª¸ºµÄ£¬Ôò´ÓÄ©Î²¿ªÊ¼Ëã
-%     CList.sublist(from, to) ·µ»ØÁĞ±íÖĞ´Ófromµ½to£¨×ó¿ªÓÒ±Õ£©Ö®¼äµÄÊÓÍ¼
-%     CList.content() ·µ»ØÁĞ±íµÄÊı¾İ£¬ÒÔÒ»Î¬cellsÊı×éµÄĞÎÊ½·µ»Ø¡£
-%     CList.toarray() = CList.content() contentµÄ±ğÃû
+% æ”¯æŒæ“ä½œï¼š
+%     sz = CList.size() è¿”å›é˜Ÿåˆ—å†…å…ƒç´ ä¸ªæ•°
+%     y = CList.empty() è¿”å›é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
+%     CList.pushtofront(el) å°†æ–°å…ƒç´ elå‹å…¥åˆ—è¡¨å¤´
+%     CList.pushtorear(el) å°†æ–°å…ƒç´ elå‹å…¥åˆ—è¡¨å°¾éƒ¨
+%     el = CList.popfront()  å¼¹å‡ºåˆ—è¡¨å¤´éƒ¨å…ƒç´ ï¼Œç”¨æˆ·éœ€è‡ªå·±ç¡®ä¿é˜Ÿåˆ—éç©º
+%     el = CList.poprear() å¼¹å‡ºåˆ—è¡¨å°¾éƒ¨å…ƒç´ ï¼Œç”¨æˆ·éœ€è‡ªå·±ç¡®ä¿åˆ—è¡¨éç©º
+%     el = CList.front() è¿”å›é˜Ÿé¦–å…ƒç´ ï¼Œç”¨æˆ·éœ€è‡ªå·±ç¡®ä¿é˜Ÿåˆ—éç©º
+%     el = CList.back() è¿”å›é˜Ÿå°¾å…ƒç´ ï¼Œç”¨æˆ·éœ€è‡ªå·±ç¡®ä¿é˜Ÿåˆ—éç©º
+%     CList.remove(k) åˆ é™¤ç¬¬kä¸ªå…ƒç´ ï¼Œå¦‚æœkä¸ºè´Ÿçš„ï¼Œåˆ™ä»å°¾éƒ¨å¼€å§‹ç®—  
+%     CList.removeall() åˆ é™¤é˜Ÿåˆ—æ‰€æœ‰å…ƒç´ 
+%     CList.add(el, k) æ’å…¥å…ƒç´ elåˆ°ç¬¬kä¸ªä½ç½®ï¼Œå¦‚æœkä¸ºè´Ÿçš„ï¼Œåˆ™ä»ç»“å°¾å¼€å§‹ç®—
+%     CList.contains(el) æ£€æŸ¥elæ˜¯å¦å‡ºç°åœ¨åˆ—è¡¨ä¸­ï¼Œå¦‚æœå‡ºç°ï¼Œè¿”å›ç¬¬ä¸€ä¸ªä¸‹æ ‡
+%     CList.get(k) è¿”å›åˆ—è¡¨åˆ¶å®šä½ç½®çš„å…ƒç´ ï¼Œå¦‚æœkä¸ºè´Ÿçš„ï¼Œåˆ™ä»æœ«å°¾å¼€å§‹ç®—
+%     CList.sublist(from, to) è¿”å›åˆ—è¡¨ä¸­ä»fromåˆ°toï¼ˆå·¦å¼€å³é—­ï¼‰ä¹‹é—´çš„è§†å›¾
+%     CList.content() è¿”å›åˆ—è¡¨çš„æ•°æ®ï¼Œä»¥ä¸€ç»´cellsæ•°ç»„çš„å½¢å¼è¿”å›ã€‚
+%     CList.toarray() = CList.content() contentçš„åˆ«å
 %
 % See also CStack
 %
@@ -28,15 +28,15 @@ classdef CList < handle
 % url: http://zhiqiang.org/blog/tag/matlab
 
     properties (Access = private)
-        buffer      % Ò»¸öcellÊı×é£¬±£´æÕ»µÄÊı¾İ
-        beg         % ¶ÓÁĞÆğÊ¼Î»ÖÃ
-        len         % ¶ÓÁĞµÄ³¤¶È
-        cap    % Õ»µÄÈİÁ¿£¬µ±ÈİÁ¿²»¹»Ê±£¬ÈİÁ¿À©³äÎª2±¶¡£
+        buffer      % ä¸€ä¸ªcellæ•°ç»„ï¼Œä¿å­˜æ ˆçš„æ•°æ®
+        beg         % é˜Ÿåˆ—èµ·å§‹ä½ç½®
+        len         % é˜Ÿåˆ—çš„é•¿åº¦
+        cap    % æ ˆçš„å®¹é‡ï¼Œå½“å®¹é‡ä¸å¤Ÿæ—¶ï¼Œå®¹é‡æ‰©å……ä¸º2å€ã€‚
     end
 
     methods (Access = public)
         function self = CList(c)
-            starting_capacity = 100;
+            starting_capacity = 5;
             if nargin >= 1 && iscell(c)
                 self.buffer = [c(:); cell(numel(c), 1)];
                 self.beg = 1;
@@ -56,8 +56,12 @@ classdef CList < handle
             end
         end
         
-        function s = size(self)
+        function s = size(self)   % Can be used as size(list)
             s = self.len;
+        end
+
+        function n = numel(self)  % Can be used as numel(list)
+            n = self.len;
         end
 
         function c = capacity(self)
@@ -67,9 +71,14 @@ classdef CList < handle
         function b = empty(self)
             b = (self.len == 0);
         end
+
+        function clear(self) % æ¸…ç©ºåˆ—è¡¨
+            self.len = 0;
+            self.beg = 1;
+        end
         
-        function push_back(self, el) % Ñ¹ÈëĞÂÔªËØµ½¶ÓÎ²
-            self.addcapacity();
+        function push_back(self, el) % å‹å…¥æ–°å…ƒç´ åˆ°é˜Ÿå°¾
+            self.increase_capacity();
             if self.beg + self.len  <= self.cap
                 self.buffer{self.beg+self.len} = el;
             else
@@ -78,8 +87,8 @@ classdef CList < handle
             self.len = self.len + 1;
         end
         
-        function push_front(self, el) % Ñ¹ÈëĞÂÔªËØµ½¶ÓÍ·
-            self.addcapacity();
+        function push_front(self, el) % å‹å…¥æ–°å…ƒç´ åˆ°é˜Ÿå¤´
+            self.increase_capacity();
             self.beg = self.beg - 1;
             if self.beg == 0
                 self.beg = self.cap; 
@@ -88,7 +97,7 @@ classdef CList < handle
             self.len = self.len + 1;
         end
         
-        function el = pop_front(self) % µ¯³ö¶ÓÊ×ÔªËØ
+        function el = pop_front(self) % å¼¹å‡ºé˜Ÿé¦–å…ƒç´ 
             el = self.buffer(self.beg);
             self.beg = self.beg + 1;
             self.len = self.len - 1;
@@ -97,7 +106,7 @@ classdef CList < handle
             end
         end
         
-        function el = pop_back(self) % µ¯³ö¶ÓÎ²ÔªËØ
+        function el = pop_back(self) % å¼¹å‡ºé˜Ÿå°¾å…ƒç´ 
             tmp = self.beg + self.len;
             if tmp > self.cap
                 tmp = tmp - self.cap;
@@ -106,7 +115,7 @@ classdef CList < handle
             self.len = self.len - 1;
         end
         
-        function el = front(self) % ·µ»Ø¶ÓÊ×ÔªËØ
+        function el = front(self) % è¿”å›é˜Ÿé¦–å…ƒç´ 
             try
                 el = self.buffer{self.beg};
             catch ME
@@ -114,7 +123,7 @@ classdef CList < handle
             end
         end
         
-        function el = back(self) % ·µ»Ø¶ÓÎ²ÔªËØ
+        function el = back(self) % è¿”å›é˜Ÿå°¾å…ƒç´ 
             try
                 tmp = self.beg + self.len - 1;
                 if tmp >= self.cap
@@ -126,47 +135,37 @@ classdef CList < handle
             end            
         end
         
-        function clear(self) % Çå¿ÕÁĞ±í
-            self.len = 0;
-            self.beg = 1;
-        end
-        
-        % É¾³ıµÚk¸öÔªËØ£¬k¿ÉÒÔÎª¸ºµÄ£¬±íÊ¾´ÓÎ²²¿¿ªÊ¼Ëã
+        % åˆ é™¤ç¬¬kä¸ªå…ƒç´ ï¼Œkå¯ä»¥ä¸ºè´Ÿçš„ï¼Œè¡¨ç¤ºä»å°¾éƒ¨å¼€å§‹ç®—
         function erase(self, k)
             if nargin == 2
-                id = self.getindex(k);
+                id = self.get_index(k);
 
                 self.buffer{id} = [];
                 self.len = self.len - 1;
                 self.cap = self.cap - 1;
 
-                % É¾³ıÔªËØºó£¬ĞèÒªÖØĞÂµ÷ÕûbegµÄÎ»ÖÃÖµ
+                % åˆ é™¤å…ƒç´ åï¼Œéœ€è¦é‡æ–°è°ƒæ•´begçš„ä½ç½®å€¼
                 if id < self.beg
                     self.beg = self.beg - 1;
                 end
             end
         end
         
-        % ²åÈëĞÂÔªËØelµ½µÚk¸öÔªËØÖ®Ç°£¬Èç¹ûkÎª¸ºÊı£¬Ôò²åÈëµ½µ¹ÊıµÚ-k¸öÔªËØÖ®ºó
+        % æ’å…¥æ–°å…ƒç´ elåˆ°ç¬¬kä¸ªå…ƒç´ ä¹‹å‰ï¼Œkå¯ä»¥ä¸ºè´Ÿæ•°
         function insert(self, el, k)
-            self.addcapacity();
-            id = self.getindex(k);
+            self.increase_capacity();
+            id = self.get_index(k);
             
-            if k > 0 % ²åÈëÔÚµÚid¸öÔªËØÖ®Ç°
+            if k > 0 % æ’å…¥åœ¨ç¬¬idä¸ªå…ƒç´ ä¹‹å‰
                 self.buffer = [self.buffer(1:id-1); el; self.buffer(id:end)];
-                if id < self.beg
-                    self.beg = self.beg + 1;
-                end
-            else % k < 0£¬²åÈëÔÚµÚid¸öÔªËØÖ®ºó
-                self.buffer = [self.buffer(1:id); el; self.buffer(id:end)];
                 if id < self.beg
                     self.beg = self.beg + 1;
                 end
             end
         end
         
-        % ÒÀ´ÎÏÔÊ¾¶ÓÁĞÔªËØ
-        function display(self)
+        % ä¾æ¬¡æ˜¾ç¤ºé˜Ÿåˆ—å…ƒç´ 
+        function disp(self)
             if self.size()
                 rear = self.beg + self.len - 1;
                 if rear <= self.cap
@@ -190,7 +189,7 @@ classdef CList < handle
         end
         
         
-        % »ñÈ¡ÁĞ±íµÄÊı¾İÄÚÈİ
+        % è·å–åˆ—è¡¨çš„æ•°æ®å†…å®¹
         function c = content(self)
             rear = self.beg + self.len - 1;
             if rear <= self.cap
@@ -200,16 +199,12 @@ classdef CList < handle
             end
         end
         
-        % »ñÈ¡ÁĞ±íµÄÊı¾İÄÚÈİ£¬µÈÍ¬ÓÚself.content();
-        function c = toarray(self)
-            c = self.content();
-        end
     end
     
     methods (Access = private)
         
-        % getindex(k) ·µ»ØµÚk¸öÔªËØÔÚbufferµÄÏÂ±êÎ»ÖÃ
-        function id = getindex(self, k)
+        % getindex(k) è¿”å›ç¬¬kä¸ªå…ƒç´ åœ¨bufferçš„ä¸‹æ ‡ä½ç½®
+        function id = get_index(self, k)
             if k > 0
                 id = self.beg + k;
             else
@@ -221,9 +216,9 @@ classdef CList < handle
             end
         end
         
-        % µ±bufferµÄÔªËØ¸öÊı½Ó½üÈİÁ¿ÉÏÏŞÊ±£¬½«ÆäÈİÁ¿À©³äÒ»±¶¡£
-        % ´ËÊ±Ğı×ªÁĞ±í£¬Ê¹µÃ´Ó1¿ªÊ¼¡£Õû¸öÁĞ±íÖÁÉÙÓĞÁ½¸öÒÔÉÏ¿ÕÎ»¡£
-        function addcapacity(self)
+        % å½“bufferçš„å…ƒç´ ä¸ªæ•°æ¥è¿‘å®¹é‡ä¸Šé™æ—¶ï¼Œå°†å…¶å®¹é‡æ‰©å……ä¸€å€ã€‚
+        % æ­¤æ—¶æ—‹è½¬åˆ—è¡¨ï¼Œä½¿å¾—ä»1å¼€å§‹ã€‚æ•´ä¸ªåˆ—è¡¨è‡³å°‘æœ‰ä¸¤ä¸ªä»¥ä¸Šç©ºä½ã€‚
+        function increase_capacity(self)
             if self.len >= self.cap - 1
                 sz = self.len;
                 if self.beg + sz - 1 <= self.cap
@@ -237,9 +232,6 @@ classdef CList < handle
                 self.beg = 1;
             end
         end
-    end % private methos
-    
-    methods (Abstract)
-        
-    end
+    end % private methods
+
 end

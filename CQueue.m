@@ -45,122 +45,132 @@ classdef CQueue < handle
         beg         % the start position of the queue
         rear        % the end position of the queue
                     % the actually data is buffer(beg:rear-1)
+        cap    % 栈的容量，当容量不够时，容量扩充为2倍。
     end
     
     properties (Access = public)
-        capacity    % 栈的容量，当容量不够时，容量扩充为2倍。
+        
     end
     
     methods
-        function obj = CQueue(c) % 初始化
+        function self = CQueue(c) % 初始化
+            starting_capacity = 100;
             if nargin >= 1 && iscell(c)
-                obj.buffer = [c(:); cell(numel(c), 1)];
-                obj.beg = 1;
-                obj.rear = numel(c) + 1;
-                obj.capacity = 2*numel(c);
+                self.buffer = [c(:); cell(numel(c), 1)];
+                self.beg = 1;
+                self.rear = numel(c) + 1;
+                self.cap = 2*numel(c);
             elseif nargin >= 1
-                obj.buffer = cell(100, 1);
-                obj.buffer{1} = c;
-                obj.beg = 1;
-                obj.rear = 2;
-                obj.capacity = 100;                
+                self.buffer = cell(starting_capacity, 1);
+                self.buffer{1} = c;
+                self.beg = 1;
+                self.rear = 2;
+                self.cap = starting_capacity;                
             else
-                obj.buffer = cell(100, 1);
-                obj.capacity = 100;
-                obj.beg = 1;
-                obj.rear = 1;
+                self.buffer = cell(starting_capacity, 1);
+                self.cap = starting_capacity;
+                self.beg = 1;
+                self.rear = 1;
             end
         end
         
-        function s = size(obj) % 队列长度
-            if obj.rear >= obj.beg
-                s = obj.rear - obj.beg;
+        function s = size(self)  % Can be used as size(queue)
+            if self.rear >= self.beg
+                s = self.rear - self.beg;
             else
-                s = obj.rear - obj.beg + obj.capacity;
+                s = self.rear - self.beg + self.cap;
             end
         end
-        
-        function b = isempty(obj)   % return true when the queue is empty
-            b = ~logical(obj.size());
+
+        function n = numel(self)  % Can be used as numel(numel)
+            n = self.size();
         end
         
-        function s = empty(obj) % clear all the data in the queue
-            s = obj.size();
-            obj.beg = 1;
-            obj.rear = 1;
+        function c = capacity(self)
+            c = self.cap;
+        end
+
+        function b = empty(self)   % return true when the queue is empty
+            b = self.size() == 0;
         end
         
-        function push(obj, el) % 压入新元素到队尾
-            if obj.size >= obj.capacity - 1
-                sz = obj.size();
-                if obj.rear >= obj.front
-                    obj.buffer(1:sz) = obj.buffer(obj.beg:obj.rear-1);                    
+        function s = clear(self) % clear all the data in the queue
+            s = self.size();
+            self.beg = 1;
+            self.rear = 1;
+        end
+        
+        function push(self, el) % 压入新元素到队尾
+            if self.size >= self.cap - 1
+                sz = self.size();
+                if self.rear >= self.front
+                    self.buffer(1:sz) = self.buffer(self.beg:self.rear-1);                    
                 else
-                    obj.buffer(1:sz) = obj.buffer([obj.beg:obj.capacity 1:obj.rear-1]);
+                    self.buffer(1:sz) = self.buffer([self.beg:self.cap 1:self.rear-1]);
                 end
-                obj.buffer(sz+1:obj.capacity*2) = cell(obj.capacity*2-sz, 1);
-                obj.capacity = numel(obj.buffer);
-                obj.beg = 1;
-                obj.rear = sz+1;
+                self.buffer(sz+1:self.cap*2) = cell(self.cap*2-sz, 1);
+                self.cap = numel(self.buffer);
+                self.beg = 1;
+                self.rear = sz+1;
             end
-            obj.buffer{obj.rear} = el;
-            obj.rear = mod(obj.rear, obj.capacity) + 1;
+            self.buffer{self.rear} = el;
+            self.rear = mod(self.rear, self.cap) + 1;
         end
         
-        function el = front(obj) % 返回队首元素
-            if obj.rear ~= obj.beg
-                el = obj.buffer{obj.beg};
+        function el = front(self) % 返回队首元素
+            if self.rear ~= self.beg
+                el = self.buffer{self.beg};
             else
                 el = [];
                 warning('CQueue:NO_DATA', 'try to get data from an empty queue');
             end
         end
         
-        function el = back(obj) % 返回队尾元素            
+        function el = back(self) % 返回队尾元素            
             
-           if obj.rear == obj.beg
+           if self.rear == self.beg
                el = [];
                warning('CQueue:NO_DATA', 'try to get data from an empty queue');
            else
-               if obj.rear == 1
-                   el = obj.buffer{obj.capacity};
+               if self.rear == 1
+                   el = self.buffer{self.cap};
                else
-                   el = obj.buffer{obj.rear - 1};
+                   el = self.buffer{self.rear - 1};
                end
             end
             
         end
         
-        function el = pop(obj) % 弹出队首元素
-            if obj.rear == obj.beg
+        function el = pop(self) % 弹出队首元素
+            if self.rear == self.beg
                 error('CQueue:NO_Data', 'Trying to pop an empty queue');
             else
-                el = obj.buffer{obj.beg};
-                obj.beg = obj.beg + 1;
-                if obj.beg > obj.capacity, obj.beg = 1; end
+                el = self.buffer{self.beg};
+                self.beg = self.beg + 1;
+                if self.beg > self.cap, self.beg = 1; end
             end             
         end
         
-        function remove(obj) % 清空队列
-            obj.beg = 1;
-            obj.rear = 1;
+        function remove(self) % 清空队列
+            self.beg = 1;
+            self.rear = 1;
         end
         
-        function display(obj) % 显示队列
-            if obj.size()
-                if obj.beg <= obj.rear 
-                    for i = obj.beg : obj.rear-1
-                        disp([num2str(i - obj.beg + 1) '-th element of the stack:']);
-                        disp(obj.buffer{i});
+        function disp(self) % 显示队列
+            if self.size()
+                if self.beg <= self.rear 
+                    for i = self.beg : self.rear-1
+                        disp([num2str(i - self.beg + 1) '-th element of the stack:']);
+                        disp(self.buffer{i});
                     end
                 else
-                    for i = obj.beg : obj.capacity
-                        disp([num2str(i - obj.beg + 1) '-th element of the stack:']);
-                        disp(obj.buffer{i});
+                    for i = self.beg : self.cap
+                        disp([num2str(i - self.beg + 1) '-th element of the stack:']);
+                        disp(self.buffer{i});
                     end     
-                    for i = 1 : obj.rear-1
-                        disp([num2str(i + obj.capacity - obj.beg + 1) '-th element of the stack:']);
-                        disp(obj.buffer{i});
+                    for i = 1 : self.rear-1
+                        disp([num2str(i + self.cap - self.beg + 1) '-th element of the stack:']);
+                        disp(self.buffer{i});
                     end
                 end
             else
@@ -168,11 +178,11 @@ classdef CQueue < handle
             end
         end
         
-        function c = content(obj) % 取出队列元素
-            if obj.rear >= obj.beg
-                c = obj.buffer(obj.beg:obj.rear-1);                    
+        function c = content(self) % 取出队列元素
+            if self.rear >= self.beg
+                c = self.buffer(self.beg:self.rear-1);                    
             else
-                c = obj.buffer([obj.beg:obj.capacity 1:obj.rear-1]);
+                c = self.buffer([self.beg:self.cap 1:self.rear-1]);
             end
         end
     end

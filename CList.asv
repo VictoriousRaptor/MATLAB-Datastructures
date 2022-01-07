@@ -33,27 +33,24 @@ classdef CList < handle
         len         % 队列的长度
         cap    % 栈的容量，当容量不够时，容量扩充为2倍。
     end
-    
-    properties (Constant)
-        start_capacity = 4;
-    end
 
     methods (Access = public)
         function self = CList(c)
+            starting_capacity = 5;
             if nargin >= 1 && iscell(c)
                 self.buffer = [c(:); cell(numel(c), 1)];
                 self.beg = 1;
                 self.len = numel(c);
                 self.cap = 2*numel(c);
             elseif nargin >= 1
-                self.buffer = cell(self.start_capacity, 1);
+                self.buffer = cell(starting_capacity, 1);
                 self.buffer{1} = c;
                 self.beg = 1;
                 self.len = 1;
-                self.cap = 100;                
+                self.cap = starting_capacity;                
             else
-                self.buffer = cell(self.start_capacity, 1);
-                self.cap = 100;
+                self.buffer = cell(starting_capacity, 1);
+                self.cap = starting_capacity;
                 self.beg = 1;
                 self.len = 0;
             end
@@ -63,6 +60,8 @@ classdef CList < handle
             s = self.len;
         end
 
+        
+
         function c = capacity(self)
             c = self.cap;
         end
@@ -70,9 +69,14 @@ classdef CList < handle
         function b = empty(self)
             b = (self.len == 0);
         end
+
+        function clear(self) % 清空列表
+            self.len = 0;
+            self.beg = 1;
+        end
         
         function push_back(self, el) % 压入新元素到队尾
-            self.addcapacity();
+            self.increase_capacity();
             if self.beg + self.len  <= self.cap
                 self.buffer{self.beg+self.len} = el;
             else
@@ -82,7 +86,7 @@ classdef CList < handle
         end
         
         function push_front(self, el) % 压入新元素到队头
-            self.addcapacity();
+            self.increase_capacity();
             self.beg = self.beg - 1;
             if self.beg == 0
                 self.beg = self.cap; 
@@ -129,19 +133,10 @@ classdef CList < handle
             end            
         end
         
-        function clear(self) % 清空列表
-            self.len = 0;
-            self.beg = 1;
-        end
-        
         % 删除第k个元素，k可以为负的，表示从尾部开始算
-        % 如果没有设定k，则为清空列表所有元素
-        function remove(self, k)
-            if nargin == 1
-                self.len = 0;
-                self.beg = 1;
-            else % k ~= 0
-                id = self.getindex(k);
+        function erase(self, k)
+            if nargin == 2
+                id = self.get_index(k);
 
                 self.buffer{id} = [];
                 self.len = self.len - 1;
@@ -154,18 +149,13 @@ classdef CList < handle
             end
         end
         
-        % 插入新元素el到第k个元素之前，如果k为负数，则插入到倒数第-k个元素之后
-        function add(self, el, k)
-            self.addcapacity();
-            id = self.getindex(k);
+        % 插入新元素el到第k个元素之前，k可以为负数
+        function insert(self, el, k)
+            self.increase_capacity();
+            id = self.get_index(k);
             
             if k > 0 % 插入在第id个元素之前
                 self.buffer = [self.buffer(1:id-1); el; self.buffer(id:end)];
-                if id < self.beg
-                    self.beg = self.beg + 1;
-                end
-            else % k < 0，插入在第id个元素之后
-                self.buffer = [self.buffer(1:id); el; self.buffer(id:end)];
                 if id < self.beg
                     self.beg = self.beg + 1;
                 end
@@ -173,7 +163,7 @@ classdef CList < handle
         end
         
         % 依次显示队列元素
-        function display(self)
+        function disp(self)
             if self.size()
                 rear = self.beg + self.len - 1;
                 if rear <= self.cap
@@ -207,16 +197,12 @@ classdef CList < handle
             end
         end
         
-        % 获取列表的数据内容，等同于self.content();
-        function c = toarray(self)
-            c = self.content();
-        end
     end
     
     methods (Access = private)
         
         % getindex(k) 返回第k个元素在buffer的下标位置
-        function id = getindex(self, k)
+        function id = get_index(self, k)
             if k > 0
                 id = self.beg + k;
             else
@@ -230,7 +216,7 @@ classdef CList < handle
         
         % 当buffer的元素个数接近容量上限时，将其容量扩充一倍。
         % 此时旋转列表，使得从1开始。整个列表至少有两个以上空位。
-        function addcapacity(self)
+        function increase_capacity(self)
             if self.len >= self.cap - 1
                 sz = self.len;
                 if self.beg + sz - 1 <= self.cap
@@ -244,9 +230,6 @@ classdef CList < handle
                 self.beg = 1;
             end
         end
-    end % private methos
-    
-    methods (Abstract)
-        
-    end
+    end % private methods
+
 end
