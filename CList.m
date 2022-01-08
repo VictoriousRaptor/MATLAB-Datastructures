@@ -148,37 +148,60 @@ classdef CList < handle
                 error('CList: erasing the 0-th elementt')
             end
             id = self.get_index(k);
-            if self.last < self.beg
-               for i = id:self.last - 2
-                   self.buffer{i} = self.buffer{i + 1};
-               end
-            else
-                for i = self.beg + 1:self.id
-                    self.buffer{i} = self.buffer{i - 1};
-                end
+            if self.last < self.beg && id <= self.last - 2
+%                for i = id:self.last - 2
+%                    self.buffer{i} = self.buffer{i + 1};
+%                end
+               self.buffer{id:self.last - 2} = self.buffer{id + 1: self.last - 1};
+            elseif self.beg + 1 < id
+%                 for i = self.beg + 1:id
+%                     self.buffer{i} = self.buffer{i - 1};
+%                 end
+                self.buffer{self.beg:id} = self.buffer{self.beg - 1:id - 1};
                 self.beg = self.beg + 1;
             end
             self.len = self.len - 1;
             self.last = mod(self.beg + self.len, self.cap);
         end
         
-        % Insert new elements before the element at the specified position k
-        % k can be negative (reverse index)
+        % Insert a new element at the element at the specified position k
+        % k can be negative (reverse index), in this case, the new element will be
+        % inserted AFTER the original one
         function insert(self, el, k)
             if k == 0
                 error('CList: accessing the 0-th elementt')
             end
             self.increase_capacity();
-            if k < 0
-                k = self.len - abs(k) + 1;
-            end
             id = self.get_index(k);
-            self.buffer = [self.buffer(1:id - 1), el, self.buffer(id:end - 1)];
-            if id < self.beg
-                self.beg = self.beg + 1;
+            if k > 0
+                if self.last > id
+                    for i = self.last:-1:id + 1
+                        self.buffer{i} = self.buffer{i - 1};
+                    end
+                    self.buffer{id} = el;
+                else
+                    for i = self.beg - 1:self.id - 1
+                        self.buffer{i} = self.buff{i + 1};
+                    end
+                    self.buffer{id} = el;
+                end 
+            else
+                k = self.len + k + 1;
+                self.insert(el, k);
             end
             self.len = self.len + 1;
             self.last = mod(self.beg + self.len, self.cap);
+        end
+
+        % Replace  the element at the specified position k
+        % k can be negative (reverse index)
+        function replace(self, el, k)
+            if k == 0
+                error('CList: accessing the 0-th elementt')
+            end
+            self.increase_capacity();
+            id = self.get_index(k);
+            self.buffer{id} = el;
         end
         
         % Display elements
