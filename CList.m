@@ -83,7 +83,7 @@ classdef CList < handle
         function clear(self)
             self.len = 0;
             self.beg = 1;
-            self.last = 2;
+            self.last = 1;
         end
         
         function push_back(self, el)  % push a new element to the back
@@ -254,7 +254,7 @@ classdef CList < handle
         end
 
         function increase_capacity(self)
-            if self.len == self.cap - 1
+            if self.len >= self.cap - 2
                 self.buffer = [self.buffer, cell(1, self.cap)];
                 if self.beg > 2  %  must be a loop
                     self.buffer(self.cap + 1, self.cap + self.beg - 1) = self.buffer(1:self.beg - 2);
