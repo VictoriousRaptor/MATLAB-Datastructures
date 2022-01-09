@@ -19,6 +19,7 @@ classdef CList < handle
 %     the reverse k-th element
 %     CList.insert(el, k) Insert a new element at the k-th position, k can
 %     be negative
+%     CList.replace(el, k) Replace the k-th element, k can be negative
 %     CList.content() Return a 1-D cell array containing all data
 %     numel(instance) Return size
 %     size(instance) Return size
@@ -149,15 +150,9 @@ classdef CList < handle
             end
             id = self.get_index(k);
             if self.last < self.beg && id <= self.last - 2
-%                for i = id:self.last - 2
-%                    self.buffer{i} = self.buffer{i + 1};
-%                end
-               self.buffer{id:self.last - 2} = self.buffer{id + 1: self.last - 1};
+               self.buffer(id:self.last - 2) = self.buffer(id + 1: self.last - 1);
             elseif self.beg + 1 < id
-%                 for i = self.beg + 1:id
-%                     self.buffer{i} = self.buffer{i - 1};
-%                 end
-                self.buffer{self.beg:id} = self.buffer{self.beg - 1:id - 1};
+                self.buffer(self.beg:id) = self.buffer(self.beg - 1:id - 1);
                 self.beg = self.beg + 1;
             end
             self.len = self.len - 1;
@@ -182,14 +177,10 @@ classdef CList < handle
             id = self.get_index(k);
             if k > 0
                 if self.last > id
-                    for i = self.last:-1:id + 1
-                        self.buffer{i} = self.buffer{i - 1};
-                    end
+                    self.buffer(id + 1:self.last) = self.buffer(id:self.last - 1);
                     self.buffer{id} = el;
                 else
-                    for i = self.beg - 1:self.id - 1
-                        self.buffer{i} = self.buff{i + 1};
-                    end
+                    self.buffer(self.beg - 1:self.id - 1) = self.buffer(self.beg:self.id);
                     self.buffer{id} = el;
                 end 
             else
