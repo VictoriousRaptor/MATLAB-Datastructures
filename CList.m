@@ -43,10 +43,10 @@ classdef CList < handle
         function self = CList(c)
             starting_capacity = 5;
             if nargin >= 1 && iscell(c)
-                self.buffer = [c(:), cell(1, numel(c))];
+                self.buffer = [c, cell(1, 1)];
                 self.beg = 1;
                 self.len = numel(c);
-                self.cap = self.len;
+                self.cap = self.len + 1;
                 self.last = self.len + 1;
             elseif nargin >= 1
                 self.buffer = cell(1, starting_capacity);
@@ -225,13 +225,11 @@ classdef CList < handle
             end
         end
         
-        
         % Return all content
         function c = content(self)
             if self.empty()
                 c = {};
-            end
-            if self.last > self.beg
+            elseif self.last > self.beg
                 c = self.buffer(self.beg:self.last - 1);                    
             else
                 c = self.buffer([self.beg:self.cap, 1:self.last - 1]);
