@@ -172,6 +172,13 @@ classdef CList < handle
                 error('CList: accessing the 0-th elementt')
             end
             self.increase_capacity();
+            if k == self.len + 1
+                self.push_back(el);
+                return
+            elseif k == -(self.len + 1)
+                self.push_front(el);
+                return
+            end
             id = self.get_index(k);
             if k > 0
                 if self.last > id
@@ -187,7 +194,7 @@ classdef CList < handle
                 end 
             else
                 k = self.len + k + 1;
-                self.insert(el, k);
+                self.insert(el, k + 1);
             end
             self.len = self.len + 1;
             self.last = mod(self.beg + self.len, self.cap);
